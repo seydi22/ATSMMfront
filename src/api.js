@@ -1,5 +1,11 @@
 const TOKEN_KEY = "ats_portal_token";
 
+// En prod Vercel : pointer vers le backend (surchargeable via VITE_API_URL)
+const API_BASE = (
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? "https://atsm-mbackend.vercel.app" : "")
+).replace(/\/$/, "");
+
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
@@ -22,7 +28,8 @@ async function request(path, options = {}) {
     options.body = JSON.stringify(options.body);
   }
 
-  const res = await fetch(`/api${path}`, { ...options, headers });
+  const url = `${API_BASE}/api${path}`;
+  const res = await fetch(url, { ...options, headers });
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {

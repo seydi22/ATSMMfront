@@ -138,12 +138,12 @@ export default function JourneeDetail() {
     );
   }
 
-  const canSendOv = ["brouillon", "demande_ov_envoyee"].includes(journee.statut);
-  const canUploadOv = [
-    "demande_ov_envoyee",
-    "ov_recue",
-    "envoye_banque",
-  ].includes(journee.statut);
+  const canSendOv = journee.statut === "brouillon";
+  const canUploadOv = journee.statut === "demande_ov_envoyee";
+  const ovDejaEnvoyee = ["demande_ov_envoyee", "ov_recue", "envoye_banque"].includes(
+    journee.statut
+  );
+  const banqueDejaEnvoyee = journee.statut === "envoye_banque";
 
   const debut = journee.dateDebut || journee.dateComptable;
   const fin = journee.dateFin || journee.dateComptable;
@@ -196,7 +196,11 @@ export default function JourneeDetail() {
           disabled={!canSendOv || busyOv}
           onClick={envoyerDemande}
         >
-          {busyOv ? "Envoi…" : "Envoyer demande ordre de virement"}
+          {busyOv
+            ? "Envoi…"
+            : ovDejaEnvoyee
+              ? "Demande OV déjà envoyée"
+              : "Envoyer demande ordre de virement"}
         </button>
       </section>
 
@@ -219,7 +223,11 @@ export default function JourneeDetail() {
           disabled={!canUploadOv || busyBanque}
           onClick={() => ovRef.current?.click()}
         >
-          {busyBanque ? "Traitement…" : "Uploader OV et envoyer à la banque"}
+          {busyBanque
+            ? "Traitement…"
+            : banqueDejaEnvoyee
+              ? "Déjà envoyé à la banque"
+              : "Uploader OV et envoyer à la banque"}
         </button>
         {journee.ovPhotoOriginalName && (
           <p className="muted" style={{ marginTop: "0.75rem" }}>

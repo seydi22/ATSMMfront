@@ -9,7 +9,7 @@ import {
   statutClass,
 } from "../utils";
 
-function RecapCard({ title, lot }) {
+function RecapCard({ title, lot, labelType }) {
   return (
     <section className="recap-card">
       <h2>{title}</h2>
@@ -23,8 +23,8 @@ function RecapCard({ title, lot }) {
           <dd>{formatMontant(lot?.montantTotal)}</dd>
         </div>
         <div>
-          <dt>Reason types</dt>
-          <dd>{(lot?.reasonTypes || []).join(", ") || "—"}</dd>
+          <dt>Type</dt>
+          <dd>{labelType}</dd>
         </div>
       </dl>
     </section>
@@ -178,8 +178,12 @@ export default function JourneeDetail() {
       {message && <p className="success banner">{message}</p>}
 
       <div className="recap-grid">
-        <RecapCard title="Douane (total)" lot={journee.douane} />
-        <RecapCard title="Trésor (total)" lot={journee.tresor} />
+        <RecapCard title="Douane (total)" lot={journee.douane} labelType="DGD" />
+        <RecapCard
+          title="Trésor (total)"
+          lot={journee.tresor}
+          labelType="Tresor Pay Bill"
+        />
       </div>
 
       <DetailsParJour details={journee.detailsParJour} />

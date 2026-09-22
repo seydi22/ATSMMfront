@@ -1,10 +1,8 @@
 const TOKEN_KEY = "ats_portal_token";
 
-// En prod Vercel : pointer vers le backend (surchargeable via VITE_API_URL)
-const API_BASE = (
-  import.meta.env.VITE_API_URL ||
-  (import.meta.env.PROD ? "https://atsm-mbackend.vercel.app" : "")
-).replace(/\/$/, "");
+// En production VM (nginx ou SERVE_FRONTEND) : URL relative → même origine.
+// Surcharge possible via VITE_API_URL (ex. backend séparé).
+const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
